@@ -285,8 +285,8 @@ const CONFIG = {
   // Neural painter
   modelBase: './models',
   styleCandidates: ['style-reference.jpg', 'style-reference.png', 'style-reference.webp'],
-  styleSize: 256,            // the style image is centre-cropped to this square
-  styleStrength: clamp(parseFloat(params.get('strength') ?? '0.5'), 0, 1), // 1 = reference palette only, lower keeps more of each object's own colour
+  styleSize: 384,            // the style image is centre-cropped to this square
+  styleStrength: clamp(parseFloat(params.get('strength') ?? '1'), 0, 1), // 1 = reference palette only, lower keeps more of each object's own colour
   tiers: [192, 256, 320, 384, 448],   // long side of the frame given to the network
   startTier: 1,
   slowMs: 260, fastMs: 110,  // step a tier down / up when a painted frame takes longer / shorter than this

@@ -41,7 +41,7 @@ Open the deployed address on a computer: the landing page shows a QR code for it
 
 Add these to the address:
 
-- `?strength=0.5` how far colours move toward the reference, 0 to 1. Lower keeps each object closer to its own colour (default 0.5).
+- `?strength=0.5` how far colours move toward the reference, 0 to 1. Lower keeps each object closer to its own colour (default 1).
 - `?backend=webgpu` run the network on WebGPU instead of WebGL. Untested on phones, so it is opt-in.
 - `?stylizer=https://your-server/paint` send frames to your own model instead of the built-in one (see below).
 
