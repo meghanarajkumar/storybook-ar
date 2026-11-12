@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6EFDD">
+<meta name="color-scheme" content="light">
+<title>A little magic is everywhere</title>
+<meta name="description" content="Point your camera at the world and watch it become a storybook.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F6EFDD;
+    --paper-deep: #EADFC4;
+    --moss: #24402A;
+    --fern: #4E8B4A;
+    --sage: #A8C686;
+    --buttercup: #EBC45A;
+    --petal: #E9A9A0;
+    --sky: #BFD9DC;
+    --earth: #A8744A;
+    --serif: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--moss);
+    font-family: var(--serif);
+    font-variation-settings: "SOFT" 100, "WONK" 0;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  [hidden] { display: none !important; }
+
+  /* ---------- Landing ---------- */
+  #landing {
+    position: fixed; inset: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    padding: calc(env(safe-area-inset-top, 0px) + 20px) 28px calc(env(safe-area-inset-bottom, 0px) + 28px);
+    gap: 8px;
+    overflow: auto;
+  }
+  .art { min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
+  .art svg { height: 100%; max-height: 46vh; width: auto; max-width: 100%; overflow: visible; }
+  .copy { max-width: 26rem; }
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(2.5rem, 11.5vw, 4.25rem);
+    line-height: 0.98;
+    font-weight: 560;
+    letter-spacing: -0.022em;
+    font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 0 0 26px;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    font-weight: 380;
+    max-width: 21rem;
+    color: #3d5a41;
+  }
+  #start {
+    appearance: none; border: 0; cursor: pointer;
+    font: inherit; font-size: 1.1875rem; font-weight: 600; letter-spacing: 0.005em;
+    color: var(--moss);
+    background: var(--buttercup);
+    padding: 17px 34px 18px;
+    /* a slightly uneven, hand-cut paper shape */
+    border-radius: 31px 27px 33px 26px / 28px 33px 27px 32px;
+    box-shadow: 0 3px 0 #c79f38, 0 14px 24px -14px rgba(36, 64, 42, .55);
+    transition: transform .12s ease, box-shadow .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #start:active { transform: translateY(3px); box-shadow: 0 0 0 #c79f38, 0 8px 16px -12px rgba(36, 64, 42, .5); }
+  #start:focus-visible, .glass:focus-visible { outline: 3px solid var(--moss); outline-offset: 4px; }
+  #start[disabled] { opacity: .65; }
+  #notice {
+    margin: 18px 0 0; font-size: 1rem; line-height: 1.45; max-width: 22rem;
+    padding: 12px 16px; background: #f3d9d2; border-radius: 14px; color: #5a2a22;
+  }
+  #qr {
+    display: flex; align-items: center; gap: 18px; margin-top: 30px;
+    font-size: 1rem; line-height: 1.4; color: #3d5a41; max-width: 21rem;
+  }
+  #qrCode { flex: none; width: 116px; height: 116px; padding: 10px; background: #fffaf0; border-radius: 16px; box-shadow: 0 1px 0 var(--paper-deep), 0 10px 22px -16px rgba(36,64,42,.6); }
+  #qrCode svg { display: block; width: 100%; height: 100%; }
+
+  /* one entrance: the scene is painted in, back to front */
+  @media (prefers-reduced-motion: no-preference) {
+    .layer { opacity: 0; transform: translateY(10px); animation: paint-in .7s cubic-bezier(.2,.7,.2,1) forwards; }
+    .layer:nth-of-type(1) { animation-delay: .05s; }
+    .layer:nth-of-type(2) { animation-delay: .2s; }
+    .layer:nth-of-type(3) { animation-delay: .35s; }
+    .layer:nth-of-type(4) { animation-delay: .5s; }
+    .layer:nth-of-type(5) { animation-delay: .65s; }
+    @keyframes paint-in { to { opacity: 1; transform: none; } }
+  }
+
+  @media (min-width: 880px) {
+    #landing {
+      grid-template-rows: none; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      align-items: center; gap: 6vw; padding: 6vh 8vw;
+    }
+    .art { order: 2; align-items: center; height: 100%; }
+    .art svg { max-height: 78vh; }
+    h1 { font-size: clamp(3.5rem, 5.4vw, 5.5rem); }
+    .lede { font-size: 1.25rem; }
+  }
+  @media (max-height: 560px) and (max-width: 879px) { .art { display: none; } #landing { align-content: center; } }
+
+  /* ---------- Camera stage ---------- */
+  #stage { position: fixed; inset: 0; background: #14170f; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  #cam, #view { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #cam { object-fit: cover; }
+  #view { display: block; }
+  .glass {
+    position: absolute; appearance: none; cursor: pointer; padding: 0;
+    display: grid; place-items: center;
+    width: 52px; height: 52px; border-radius: 18px;
+    color: #fffaf0;
+    background: rgba(255, 250, 236, .2);
+    border: 1px solid rgba(255, 255, 255, .38);
+    -webkit-backdrop-filter: blur(16px) saturate(1.35); backdrop-filter: blur(16px) saturate(1.35);
+    box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .45);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .12s ease, background .12s ease;
+  }
+  .glass:active, .glass.held { transform: scale(.94); background: rgba(255, 250, 236, .36); }
+  .glass svg { width: 24px; height: 24px; }
+  #close { top: calc(env(safe-area-inset-top, 0px) + 16px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
+  #shutter {
+    width: 76px; height: 76px; border-radius: 28px;
+    left: 50%; margin-left: -38px; bottom: calc(env(safe-area-inset-bottom, 0px) + 26px);
+  }
+  #shutter::after { content: ""; width: 54px; height: 54px; border-radius: 20px; background: #fffaf0; transition: transform .12s ease; }
+  #shutter:active::after { transform: scale(.88); }
+  #peek { right: calc(env(safe-area-inset-right, 0px) + 22px); bottom: calc(env(safe-area-inset-bottom, 0px) + 38px); }
+  #stage .glass:focus-visible { outline-color: #fffaf0; }
+
+  #status {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    padding: 14px 22px 16px; border-radius: 20px; text-align: center;
+    font-size: 1.0625rem; font-weight: 500; color: #fffaf0; white-space: nowrap;
+    background: rgba(30, 40, 28, .42);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    transition: opacity .5s ease;
+  }
+  #status.done { opacity: 0; pointer-events: none; }
+  #status .bar { display: block; height: 4px; margin-top: 10px; border-radius: 4px; background: rgba(255, 250, 236, .25); overflow: hidden; }
+  #status .bar i { display: block; height: 100%; width: 0%; border-radius: 4px; background: var(--buttercup); transition: width .25s ease; }
+  #flash { position: absolute; inset: 0; background: #fffaf0; opacity: 0; pointer-events: none; }
+  #flash.go { animation: flash .45s ease-out; }
+  @keyframes flash { 0% { opacity: .85; } 100% { opacity: 0; } }
+  #toast {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    top: calc(env(safe-area-inset-top, 0px) + 22px);
+    max-width: min(78vw, 22rem); padding: 11px 18px; border-radius: 16px;
+    font-size: .9375rem; line-height: 1.35; text-align: center; color: #fffaf0;
+    background: rgba(30, 40, 28, .55);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    opacity: 0; transition: opacity .3s ease; pointer-events: none;
+  }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<main id="landing">
+  <div class="art" aria-hidden="true">
+    <svg viewBox="0 0 320 380" role="img">
+      <defs>
+        <clipPath id="arch"><path d="M22 372V150a138 138 0 0 1 276 0v222Z"/></clipPath>
+        <filter id="wobble" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="2" seed="4" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="7"/>
+        </filter>
+        <filter id="grain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="9"/>
+          <feColorMatrix values="0 0 0 0 .14  0 0 0 0 .25  0 0 0 0 .16  0 0 0 .55 -.12"/>
+        </filter>
+      </defs>
+      <g filter="url(#wobble)">
+        <g clip-path="url(#arch)">
+          <g class="layer">
+            <rect x="0" y="0" width="320" height="380" fill="#BFD9DC"/>
+            <ellipse cx="96" cy="92" rx="54" ry="20" fill="#DCEBEA"/>
+            <ellipse cx="236" cy="128" rx="46" ry="15" fill="#DCEBEA"/>
+            <circle cx="214" cy="84" r="27" fill="#EBC45A"/>
+            <circle cx="214" cy="84" r="18" fill="#F3D97E"/>
+          </g>
+          <g class="layer">
+            <path d="M0 236c50-44 110-52 168-28s104 10 152-22v194H0Z" fill="#A8C686"/>
+            <path d="M0 250c46-22 88-18 128 0" stroke="#BCD39B" stroke-width="7" stroke-linecap="round" fill="none"/>
+          </g>
+          <g class="layer">
+            <path d="M0 292c64-40 132-36 196-10s88 16 124-4v102H0Z" fill="#4E8B4A"/>
+            <rect x="176" y="214" width="58" height="50" rx="3" fill="#FBF3DF"/>
+            <path d="M168 218l37-32 37 32Z" fill="#E9A9A0"/>
+            <rect x="198" y="236" width="14" height="28" rx="6" fill="#A8744A"/>
+            <rect x="182" y="226" width="11" height="11" rx="2" fill="#BFD9DC"/>
+            <rect x="218" y="226" width="11" height="11" rx="2" fill="#BFD9DC"/>
+          </g>
+          <g class="layer">
+            <rect x="80" y="232" width="9" height="56" rx="4" fill="#7A5236"/>
+            <ellipse cx="84" cy="206" rx="36" ry="44" fill="#2F5D3A"/>
+            <ellipse cx="72" cy="196" rx="15" ry="20" fill="#3F7446"/>
+            <rect x="264" y="250" width="7" height="38" rx="3" fill="#7A5236"/>
+            <ellipse cx="268" cy="232" rx="23" ry="29" fill="#3F7446"/>
+            <path d="M0 330c70-26 150-24 220-6s70 10 100 0v56H0Z" fill="#2F5D3A"/>
+            <g fill="#F3D97E"><circle cx="52" cy="330" r="5"/><circle cx="126" cy="318" r="4"/><circle cx="252" cy="336" r="5"/></g>
+            <g fill="#E9A9A0"><circle cx="92" cy="342" r="5"/><circle cx="196" cy="330" r="4.5"/><circle cx="286" cy="322" r="4"/></g>
+            <g fill="#FBF3DF"><circle cx="158" cy="346" r="4"/><circle cx="30" cy="352" r="3.5"/><circle cx="228" cy="352" r="3.5"/></g>
+          </g>
+          <rect x="0" y="0" width="320" height="380" filter="url(#grain)" style="mix-blend-mode:multiply" opacity=".5"/>
+        </g>
+        <g class="layer">
+          <path d="M6 378c2-40 14-66 38-86" stroke="#24402A" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M44 292c-22-4-34 8-36 26 20 2 34-8 36-26Z" fill="#4E8B4A"/>
+          <path d="M26 322c-20 2-28 16-26 32 18-2 28-14 26-32Z" fill="#7FB069"/>
+          <path d="M34 306c18 2 28 14 28 30-18 0-28-12-28-30Z" fill="#2F5D3A"/>
+          <path d="M314 378c-2-34-12-56-32-72" stroke="#24402A" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M282 306c20-6 34 4 38 22-20 4-34-6-38-22Z" fill="#7FB069"/>
+          <path d="M298 334c-18 0-28 12-28 28 18 0 28-12 28-28Z" fill="#4E8B4A"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="copy">
+    <h1>A little magic is everywhere.</h1>
+    <p class="lede">Point your camera at the world and watch it become a storybook.</p>
+    <button id="start" type="button">See the Magic</button>
+    <p id="notice" role="alert" hidden></p>
+    <div id="qr" hidden>
+      <div id="qrCode"></div>
+      <span>On a computer? Scan this with your phone to open it there.</span>
+    </div>
+  </div>
+</main>
+
+<section id="stage" hidden>
+  <video id="cam" playsinline muted autoplay></video>
+  <canvas id="view"></canvas>
+  <div id="status" role="status"><span id="statusText">Mixing the paints…</span><span class="bar"><i id="statusBar"></i></span></div>
+  <button id="close" class="glass" type="button" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <button id="shutter" class="glass" type="button" aria-label="Save a picture"></button>
+  <button id="peek" class="glass" type="button" aria-label="Hold to see the real world">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div id="flash"></div>
+  <div id="toast" role="status"></div>
+</section>
+
+<script type="module">
+/* =====================================================================
+   Storybook AR
+   ---------------------------------------------------------------------
+   Layer 1  camera, UI, Three.js compositor, capture
+   Layer 2  neural style transfer (TensorFlow.js) over the whole frame,
+            semantic segmentation (MediaPipe DeepLab v3) to leave people
+            unpainted
+   Layer 3  global motion tracking between painted frames, temporal
+            smoothing, adaptive resolution
+
+   What is and is not neural here:
+     - The painted image is the output of a neural style-transfer network
+       (Magenta arbitrary-image-stylization, weights in ./models).
+     - The compositor shader only places that output on screen, holds it
+       steady, masks people and adds a faint paper grain. It does not
+       stylise anything by itself. If the network fails to load, the app
+       shows the plain camera and says so.
+   ===================================================================== */
+
+const params = new URLSearchParams(location.search);
+
+const CONFIG = {
+  // Neural painter
+  modelBase: './models',
+  styleCandidates: ['style-reference.jpg', 'style-reference.png', 'style-reference.webp'],
+  styleSize: 256,            // the style image is centre-cropped to this square
+  styleStrength: clamp(parseFloat(params.get('strength') ?? '0.5'), 0, 1), // 1 = reference palette only, lower keeps more of each object's own colour
+  tiers: [192, 256, 320, 384, 448],   // long side of the frame given to the network
+  startTier: 1,
+  slowMs: 260, fastMs: 110,  // step a tier down / up when a painted frame takes longer / shorter than this
+  backend: params.get('backend') === 'webgpu' ? 'webgpu' : 'webgl',
+  remoteEndpoint: params.get('stylizer'),   // optional: URL of a server-side stylizer (see RemoteStylizer)
+
+  // Temporal consistency
+  temporalKeep: 0.3,         // share of the previous painted frame kept in the new one
+  matchErr: 0.45, lostErr: 0.8, // match error (relative to scene contrast) below which two frames count as the same view
+  fadeMs: 200,
+
+  // People
+  maskHz: 6,
+  maskLongSide: 256,
+
+  libs: {
+    three: 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
+    tf: 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js',
+    tfWebGPU: 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgpu@4.22.0/dist/tf-backend-webgpu.min.js',
+    vision: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs',
+    visionWasm: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm',
+    segModel: 'https://storage.googleapis.com/mediapipe-models/image_segmenter/deeplab_v3/float32/1/deeplab_v3.tflite',
+    qr: 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js',
+  },
+};
+
+function clamp(v, a, b) { return Number.isFinite(v) ? Math.min(b, Math.max(a, v)) : b; }
+const $ = id => document.getElementById(id);
+const nextFrame = () => new Promise(r => requestAnimationFrame(r));
+const loadScript = src => new Promise((res, rej) => {
+  const s = document.createElement('script');
+  s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load ' + src));
+  document.head.appendChild(s);
+});
+
+/* ---------------------------------------------------------------------
+   Style reference
+   Put the reference illustration next to this file as style-reference.jpg
+   (or .png / .webp). Until then a built-in gouache swatch is used so the
+   app runs; it is a stand-in, not the intended look.
+   --------------------------------------------------------------------- */
+async function loadStyleSource() {
+  for (const name of CONFIG.styleCandidates) {
+    try {
+      const img = new Image();
+      img.src = name;
+      await img.decode();
+      const c = document.createElement('canvas');
+      c.width = c.height = CONFIG.styleSize;
+      const s = Math.min(img.naturalWidth, img.naturalHeight);
+      c.getContext('2d').drawImage(img, (img.naturalWidth - s) / 2, (img.naturalHeight - s) / 2, s, s, 0, 0, c.width, c.height);
+      return c;
+    } catch { /* try the next name */ }
+  }
+  const c = document.createElement('canvas');
+  c.width = c.height = CONFIG.styleSize;
+  paintHouseStyle(c);
+  return c;
+}
+
+// A procedural gouache swatch: botanical greens, soft yellows, pastels, warm earths.
+function paintHouseStyle(canvas) {
+  const S = canvas.width, c = canvas.getContext('2d');
+  let seed = 11;
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const groups = [
+    [0.50, ['#2F5D3A', '#3F7446', '#4E8B4A', '#7FB069', '#A8C686', '#24402A']],
+    [0.18, ['#EBC45A', '#F3D97E', '#F6E7B0']],
+    [0.13, ['#E9A9A0', '#BFD9DC', '#D8C4DE', '#F2C9B8']],
+    [0.12, ['#A8744A', '#7A5236', '#C99B6B']],
+    [0.07, ['#F6EFDD', '#FBF3DF']],
+  ];
+  const pick = () => {
+    let r = rnd();
+    for (const [w, cols] of groups) { if (r < w) return cols[Math.floor(rnd() * cols.length)]; r -= w; }
+    return '#4E8B4A';
+  };
+  c.fillStyle = '#F3EAD3'; c.fillRect(0, 0, S, S);
+  for (let i = 0; i < 46; i++) {                         // broad flat washes
+    c.globalAlpha = 0.55 + rnd() * 0.4; c.fillStyle = pick();
+    c.beginPath(); c.ellipse(rnd() * S, rnd() * S, 14 + rnd() * 52, 10 + rnd() * 40, rnd() * Math.PI, 0, Math.PI * 2); c.fill();
+  }
+  c.lineCap = 'round';
+  for (let i = 0; i < 620; i++) {                        // visible brush strokes
+    const x = rnd() * S, y = rnd() * S, a = rnd() * Math.PI * 2, len = 7 + rnd() * 26;
+    c.globalAlpha = 0.5 + rnd() * 0.45; c.strokeStyle = pick(); c.lineWidth = 1.5 + rnd() * 6.5;
+    c.beginPath(); c.moveTo(x, y);
+    c.quadraticCurveTo(x + Math.cos(a + 0.5) * len * 0.5, y + Math.sin(a + 0.5) * len * 0.5, x + Math.cos(a) * len, y + Math.sin(a) * len);
+    c.stroke();
+  }
+  for (let i = 0; i < 70; i++) {                         // leaf shapes
+    const x = rnd() * S, y = rnd() * S, a = rnd() * Math.PI * 2, l = 10 + rnd() * 18, w = l * (0.28 + rnd() * 0.2);
+    c.save(); c.translate(x, y); c.rotate(a);
+    c.globalAlpha = 0.85; c.fillStyle = pick();
+    c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(l / 2, -w, l, 0); c.quadraticCurveTo(l / 2, w, 0, 0); c.fill();
+    c.restore();
+  }
+  c.globalAlpha = 1;
+  const im = c.getImageData(0, 0, S, S), d = im.data;    // dry-brush tooth
+  for (let i = 0; i < d.length; i += 4) {
+    const n = (rnd() - 0.5) * 22;
+    d[i] += n; d[i + 1] += n; d[i + 2] += n;
+  }
+  c.putImageData(im, 0, 0);
+}
+
+/* ---------------------------------------------------------------------
+   Stylizer interface
+     init(onProgress)         load whatever is needed
+     setStyle(canvas)         fix the style reference
+     stylize(canvas)       -> { data: Uint8ClampedArray (RGBA), width, height }
+   Anything that implements these three methods can replace the painter.
+   --------------------------------------------------------------------- */
+
+// In-browser neural style transfer: a style network turns the reference
+// into a 100-number style code, a transformer network repaints each camera
+// frame according to that code.
+class NeuralStylizer {
+  async init(onProgress = () => {}) {
+    await loadScript(CONFIG.libs.tf);
+    const tf = this.tf = window.tf;
+    let ok = false;
+    if (CONFIG.backend === 'webgpu' && navigator.gpu) {
+      try { await loadScript(CONFIG.libs.tfWebGPU); ok = await tf.setBackend('webgpu'); } catch { ok = false; }
+    }
+    if (!ok) ok = await tf.setBackend('webgl');
+    if (!ok) throw new Error('No GPU backend available');
+    await tf.ready();
+    const part = [0, 0];
+    const track = i => f => { part[i] = f; onProgress(part[0] * 0.8 + part[1] * 0.2); };
+    [this.styleNet, this.transformNet] = await Promise.all([
+      tf.loadGraphModel(`${CONFIG.modelBase}/style/model.json`, { onProgress: track(0) }),
+      tf.loadGraphModel(`${CONFIG.modelBase}/transformer/model.json`, { onProgress: track(1) }),
+    ]);
+  }
+  code(source) {
+    const tf = this.tf;
+    return tf.tidy(() => this.styleNet.predict(tf.browser.fromPixels(source).toFloat().div(255).expandDims()));
+  }
+  async setStyle(canvas) {
+    this.styleCode?.dispose();
+    this.styleCode = this.code(canvas);
+    await this.styleCode.data();
+    this.mixed?.dispose(); this.mixed = null; this.mixedAt = 0;
+    this.own?.dispose(); this.own = null;
+  }
+  async stylize(canvas) {
+    const tf = this.tf, k = CONFIG.styleStrength;
+    let code = this.styleCode;
+    if (k < 1) {
+      // blend the style code with the scene's own code, refreshed now and then
+      if (!this.mixed || performance.now() - this.mixedAt > 1500) {
+        const seen = this.code(canvas), before = this.own;
+        // ease towards the new scene code so colours drift instead of jumping while panning
+        this.own = before ? tf.tidy(() => before.mul(0.5).add(seen.mul(0.5))) : seen;
+        if (before) { before.dispose(); seen.dispose(); }
+        const mixed = tf.tidy(() => this.styleCode.mul(k).add(this.own.mul(1 - k)));
+        this.mixed?.dispose();
+        this.mixed = mixed; this.mixedAt = performance.now();
+      }
+      code = this.mixed;
+    }
+    const out = tf.tidy(() => {
+      const x = tf.browser.fromPixels(canvas).toFloat().div(255).expandDims();
+      return this.transformNet.predict([x, code]).squeeze([0]).mul(255);
+    });
+    const [height, width] = out.shape;
+    const rgb = await out.data();
+    out.dispose();
+    const data = new Uint8ClampedArray(width * height * 4);
+    for (let i = 0, j = 0; i < rgb.length; i += 3, j += 4) {
+      data[j] = rgb[i]; data[j + 1] = rgb[i + 1]; data[j + 2] = rgb[i + 2]; data[j + 3] = 255;
+    }
+    return { data, width, height };
+  }
+}
+
+// Integration point for a stronger model that cannot run on a phone
+// (for example a diffusion image-to-image model on a GPU server).
+// Contract: POST the frame as image/jpeg, receive the painted frame as any
+// image type at the same aspect ratio. The server is NOT part of this
+// project; open the page with ?stylizer=https://your-endpoint to use one.
+class RemoteStylizer {
+  constructor(endpoint) { this.endpoint = endpoint; this.canvas = document.createElement('canvas'); }
+  async init(onProgress = () => {}) { onProgress(1); }
+  async setStyle() { /* the server owns the style */ }
+  async stylize(canvas) {
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.8));
+    const res = await fetch(this.endpoint, { method: 'POST', headers: { 'Content-Type': 'image/jpeg' }, body: blob });
+    if (!res.ok) throw new Error('Stylizer responded ' + res.status);
+    const bmp = await createImageBitmap(await res.blob());
+    const c = this.canvas; c.width = canvas.width; c.height = canvas.height;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(bmp, 0, 0, c.width, c.height); bmp.close?.();
+    return { data: ctx.getImageData(0, 0, c.width, c.height).data, width: c.width, height: c.height };
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Global motion between two frames
+   Works on tiny zero-mean grey thumbnails. Returns the shift d for which
+   cur(x, y) ~ ref(x - dx, y - dy), in thumbnail pixels, plus the relative match error.
+   --------------------------------------------------------------------- */
+function estimateShift(ref, cur, w, h) {
+  const Rx = Math.min(10, w >> 2), Ry = Math.min(10, h >> 2), span = 2 * Rx + 1;
+  const errs = new Float32Array(span * (2 * Ry + 1));
+  let best = Infinity, bx = 0, by = 0;
+  for (let dy = -Ry; dy <= Ry; dy++) {
+    const y0 = Math.max(0, dy), y1 = Math.min(h, h + dy);
+    for (let dx = -Rx; dx <= Rx; dx++) {
+      const x0 = Math.max(0, dx), x1 = Math.min(w, w + dx);
+      let s = 0, n = 0;
+      for (let y = y0; y < y1; y += 2) {
+        let i = y * w + x0, j = (y - dy) * w + x0 - dx;
+        for (let x = x0; x < x1; x += 2, i += 2, j += 2) { const d = cur[i] - ref[j]; s += d < 0 ? -d : d; n++; }
+      }
+      const e = s / n + 0.05 * (Math.abs(dx) + Math.abs(dy));   // slight preference for staying put
+      errs[(dy + Ry) * span + dx + Rx] = e;
+      if (e < best) { best = e; bx = dx; by = dy; }
+    }
+  }
+  // sub-pixel refinement with a parabola through the neighbours
+  const at = (x, y) => errs[(y + Ry) * span + x + Rx];
+  const refine = (m, c, p) => { const den = m - 2 * c + p; return den > 1e-6 ? clamp(0.5 * (m - p) / den, -0.5, 0.5) : 0; };
+  let fx = bx, fy = by;
+  if (bx > -Rx && bx < Rx) fx += refine(at(bx - 1, by), best, at(bx + 1, by));
+  if (by > -Ry && by < Ry) fy += refine(at(bx, by - 1), best, at(bx, by + 1));
+  // error relative to the frame's own contrast: ~0.1 for the same view, >1 for an unrelated one
+  let contrast = 0;
+  for (let i = 0; i < cur.length; i += 4) contrast += cur[i] < 0 ? -cur[i] : cur[i];
+  contrast = contrast / (cur.length / 4) + 1;
+  return { dx: fx, dy: fy, err: (best - 0.05 * (Math.abs(bx) + Math.abs(by))) / contrast };
+}
+
+// Mix the previous painted frame, moved to where the scene is now, into the new one.
+function blendPrevious(next, prev, sx, sy, keep) {
+  const { width: w, height: h, data: a } = next, b = prev.data;
+  const ox = Math.round(sx), oy = Math.round(sy), fresh = 1 - keep;
+  for (let y = 0; y < h; y++) {
+    const py = y - oy; if (py < 0 || py >= h) continue;
+    for (let x = 0; x < w; x++) {
+      const px = x - ox; if (px < 0 || px >= w) continue;
+      const i = (y * w + x) * 4, j = (py * w + px) * 4;
+      a[i] = a[i] * fresh + b[j] * keep;
+      a[i + 1] = a[i + 1] * fresh + b[j + 1] * keep;
+      a[i + 2] = a[i + 2] * fresh + b[j + 2] * keep;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Compositor shader. It positions the network's output; it does not paint.
+   --------------------------------------------------------------------- */
+const VERT = `
+  varying vec2 vUv;
+  void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
+`;
+const FRAG = `
+  precision highp float;
+  varying vec2 vUv;
+  uniform sampler2D tVideo, tA, tB, tMask;
+  uniform vec2 uCover, uOffA, uOffB, uRes, uMaskTexel;
+  uniform float uMix, uHave, uHasMask, uReveal, uIntro;
+
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float noise(vec2 p) {
+    vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
+  }
+  float person(vec2 p) {
+    float m = texture2D(tMask, p).r;
+    m = max(m, texture2D(tMask, p + vec2(uMaskTexel.x, 0.0) * 1.5).r);
+    m = max(m, texture2D(tMask, p - vec2(uMaskTexel.x, 0.0) * 1.5).r);
+    m = max(m, texture2D(tMask, p + vec2(0.0, uMaskTexel.y) * 1.5).r);
+    m = max(m, texture2D(tMask, p - vec2(0.0, uMaskTexel.y) * 1.5).r);
+    return smoothstep(0.25, 0.6, m);
+  }
+  void main() {
+    vec2 uv = (vUv - 0.5) * uCover + 0.5;        // camera space, origin bottom-left
+    vec3 cam = texture2D(tVideo, uv).rgb;
+    vec2 p = vec2(uv.x, 1.0 - uv.y);             // image space, origin top-left
+
+    // the two most recent painted frames, each held on the scene by its motion offset
+    vec3 paint = mix(texture2D(tA, p - uOffA).rgb, texture2D(tB, p - uOffB).rgb, uMix);
+
+    // faint paper tooth, fixed to the screen like the page of a book
+    vec2 px = vUv * uRes;
+    paint *= 0.95 + 0.09 * (0.6 * noise(px / 2.5) + 0.4 * noise(px / 9.0));
+
+    // first reveal: paint spreads from the centre with a ragged edge
+    float r = distance(vUv, vec2(0.5)) * 1.2 + (noise(vUv * 6.0) - 0.5) * 0.35;
+    float dry = smoothstep(uIntro * 1.6 - 0.25, uIntro * 1.6, r);
+
+    float k = uHave * (1.0 - dry) * (1.0 - uHasMask * person(p)) * (1.0 - uReveal);
+    gl_FragColor = vec4(mix(cam, paint, k), 1.0);
+  }
+`;
+
+/* ---------------------------------------------------------------------
+   The experience
+   --------------------------------------------------------------------- */
+const el = {
+  landing: $('landing'), stage: $('stage'), start: $('start'), notice: $('notice'),
+  video: $('cam'), view: $('view'), status: $('status'), statusText: $('statusText'), statusBar: $('statusBar'),
+  close: $('close'), shutter: $('shutter'), peek: $('peek'), flash: $('flash'), toast: $('toast'),
+};
+
+let THREE = null, stylizer = null, stylizerReady = null, segmenter = null, segmenterReady = null;
+let session = null;   // everything that lives only while the camera is open
+
+function toast(msg, ms = 3600) {
+  el.toast.textContent = msg; el.toast.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.toast.classList.remove('show'), ms);
+}
+function notice(msg) { el.notice.textContent = msg; el.notice.hidden = !msg; }
+
+async function openCamera() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw Object.assign(new Error('insecure'), { friendly: 'The camera only works on a secure (https) address. Open this page over https and try again.' });
+  }
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+    });
+  } catch (e) {
+    const friendly = e.name === 'NotAllowedError'
+      ? 'Camera access is off. Allow the camera for this site in your browser settings, then tap See the Magic again.'
+      : e.name === 'NotFoundError' ? 'No camera was found on this device.'
+      : 'The camera could not start. Close other apps that use it and try again.';
+    throw Object.assign(e, { friendly });
+  }
+}
+
+function prepareStylizer(onProgress) {
+  // loaded once, reused if the camera is closed and reopened
+  stylizerReady ??= (async () => {
+    const s = CONFIG.remoteEndpoint ? new RemoteStylizer(CONFIG.remoteEndpoint) : new NeuralStylizer();
+    await s.init(onProgress);
+    await s.setStyle(await loadStyleSource());
+    stylizer = s;
+  })();
+  return stylizerReady;
+}
+
+function prepareSegmenter() {
+  segmenterReady ??= (async () => {
+    const { FilesetResolver, ImageSegmenter } = await import(CONFIG.libs.vision);
+    const files = await FilesetResolver.forVisionTasks(CONFIG.libs.visionWasm);
+    const make = delegate => ImageSegmenter.createFromOptions(files, {
+      baseOptions: { modelAssetPath: CONFIG.libs.segModel, delegate },
+      runningMode: 'VIDEO', outputCategoryMask: false, outputConfidenceMasks: true,
+    });
+    let seg;
+    try { seg = await make('GPU'); } catch { seg = await make('CPU'); }
+    const labels = seg.getLabels?.() ?? [];
+    seg.personIndex = Math.max(0, labels.indexOf('person')) || 15;   // DeepLab v3: class 15 is "person"
+    segmenter = seg;
+  })();
+  return segmenterReady;
+}
+
+async function start() {
+  notice('');
+  el.start.disabled = true;
+  let stream;
+  try { stream = await openCamera(); }
+  catch (e) { notice(e.friendly ?? 'The camera could not start.'); el.start.disabled = false; return; }
+
+  el.video.srcObject = stream;
+  try { await el.video.play(); } catch { /* autoplay attribute covers it */ }
+  el.landing.hidden = true; el.stage.hidden = false;
+  el.status.classList.remove('done'); el.statusText.textContent = 'Mixing the paints…'; el.statusBar.style.width = '4%';
+  try { await navigator.wakeLock?.request('screen'); } catch { /* optional */ }
+
+  try {
+    THREE ??= await import(CONFIG.libs.three);
+  } catch {
+    toast('The page could not finish loading. Check your connection and reopen it.', 6000);
+    el.status.classList.add('done');
+    return;
+  }
+  session = createSession(stream);
+  session.run();
+
+  prepareStylizer(f => { el.statusBar.style.width = Math.round(4 + f * 92) + '%'; })
+    .then(() => session?.beginPainting())
+    .catch(err => {
+      console.error(err);
+      stylizerReady = null;
+      el.status.classList.add('done');
+      toast('The paint model did not load, so this is the plain camera. Check your connection and reopen the page.', 7000);
+    });
+  prepareSegmenter()
+    .catch(err => { console.error(err); segmenterReady = null; toast('People cannot be left unpainted right now: the segmentation model did not load.', 6000); });
+}
+
+function createSession(stream) {
+  const video = el.video;
+  const renderer = new THREE.WebGLRenderer({ canvas: el.view, antialias: false, alpha: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene(), camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  const videoTex = new THREE.VideoTexture(video);
+  videoTex.minFilter = videoTex.magFilter = THREE.LinearFilter; videoTex.generateMipmaps = false;
+
+  const dataTex = (data, w, h) => {
+    const t = new THREE.DataTexture(data, w, h, THREE.RGBAFormat, THREE.UnsignedByteType);
+    t.minFilter = t.magFilter = THREE.LinearFilter; t.generateMipmaps = false; t.needsUpdate = true;
+    return t;
+  };
+  const blank = () => dataTex(new Uint8Array([0, 0, 0, 255]), 1, 1);
+
+  const U = {
+    tVideo: { value: videoTex }, tA: { value: blank() }, tB: { value: blank() }, tMask: { value: blank() },
+    uCover: { value: new THREE.Vector2(1, 1) }, uOffA: { value: new THREE.Vector2() }, uOffB: { value: new THREE.Vector2() },
+    uRes: { value: new THREE.Vector2(1, 1) }, uMaskTexel: { value: new THREE.Vector2(1, 1) },
+    uMix: { value: 1 }, uHave: { value: 0 }, uHasMask: { value: 0 }, uReveal: { value: 0 }, uIntro: { value: 0 },
+  };
+  const material = new THREE.ShaderMaterial({ uniforms: U, vertexShader: VERT, fragmentShader: FRAG, depthTest: false, depthWrite: false });
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+  // working canvases
+  const frame = document.createElement('canvas'), fctx = frame.getContext('2d', { willReadFrequently: true });   // network input
+  const thumb = document.createElement('canvas'), tctx = thumb.getContext('2d', { willReadFrequently: true });   // motion tracking
+  const maskIn = document.createElement('canvas'), mctx = maskIn.getContext('2d');                               // segmenter input
+
+  const S = {
+    alive: true, painting: false, held: false,
+    tier: CONFIG.startTier, ema: 0, tierAt: 0,
+    refA: null, refB: null, lastB: null, baseA: [0, 0], offB: [0, 0], fadeFrom: 0, introFrom: 0,
+    maskAt: 0, maskData: null, vw: 0, vh: 0, last: performance.now(),
+  };
+
+  function layout() {
+    const w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    const buf = renderer.getDrawingBufferSize(new THREE.Vector2());
+    U.uRes.value.copy(buf);
+    const vw = video.videoWidth, vh = video.videoHeight;
+    if (!vw || !vh) return;
+    const sa = w / h, va = vw / vh;
+    U.uCover.value.set(va > sa ? sa / va : 1, va > sa ? 1 : va / sa);
+    if (vw !== S.vw || vh !== S.vh) {
+      S.vw = vw; S.vh = vh;
+      const k = 64 / Math.max(vw, vh);
+      thumb.width = Math.max(8, Math.round(vw * k)); thumb.height = Math.max(8, Math.round(vh * k));
+      const m = CONFIG.maskLongSide / Math.max(vw, vh);
+      maskIn.width = Math.round(vw * m); maskIn.height = Math.round(vh * m);
+      S.refA = S.refB = S.lastB = null;   // old references no longer line up
+    }
+  }
+
+  function grabThumb(source) {
+    const w = thumb.width, h = thumb.height;
+    tctx.drawImage(source, 0, 0, w, h);
+    const d = tctx.getImageData(0, 0, w, h).data, g = new Float32Array(w * h);
+    let mean = 0;
+    for (let i = 0, j = 0; j < g.length; i += 4, j++) { g[j] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; mean += g[j]; }
+    mean /= g.length;
+    for (let j = 0; j < g.length; j++) g[j] -= mean;   // ignore exposure changes
+    return g;
+  }
+
+  function sizeFrame() {
+    const long = CONFIG.tiers[S.tier], k = long / Math.max(S.vw, S.vh);
+    const snap = v => Math.max(96, Math.round(v * k / 16) * 16);     // the network wants multiples of 16
+    const w = snap(S.vw), h = snap(S.vh);
+    if (frame.width !== w || frame.height !== h) { frame.width = w; frame.height = h; }
+  }
+
+  function showPainted(out, ref) {
+    let base = [0, 0];
+    if (S.refB && S.refB.length === ref.length) {
+      const m = estimateShift(S.refB, ref, thumb.width, thumb.height);
+      base = [m.dx, m.dy];
+      if (m.err < CONFIG.matchErr && S.lastB && S.lastB.width === out.width && S.lastB.height === out.height) {
+        blendPrevious(out, S.lastB, m.dx * out.width / thumb.width, m.dy * out.height / thumb.height, CONFIG.temporalKeep);
+      }
+    }
+    // the newest frame becomes B, the one before it becomes A
+    const recycled = U.tA.value;
+    U.tA.value = U.tB.value;
+    if (recycled.image.width === out.width && recycled.image.height === out.height) {
+      recycled.image.data.set(out.data); recycled.needsUpdate = true; U.tB.value = recycled;
+    } else {
+      recycled.dispose(); U.tB.value = dataTex(new Uint8Array(out.data), out.width, out.height);
+    }
+    S.refA = S.refB; S.refB = ref; S.lastB = out; S.baseA = base; S.offB = [0, 0];
+    const now = performance.now();
+    if (U.uHave.value === 0) { U.uHave.value = 1; U.uMix.value = 1; S.introFrom = now; el.status.classList.add('done'); }
+    else { U.uMix.value = 0; S.fadeFrom = now; }
+  }
+
+  function adapt(ms) {
+    S.ema = S.ema ? S.ema * 0.7 + ms * 0.3 : ms;
+    const now = performance.now();
+    if (now - S.tierAt < 4000) return;
+    if (S.ema > CONFIG.slowMs && S.tier > 0) { S.tier--; S.tierAt = now; S.ema = 0; }
+    else if (S.ema < CONFIG.fastMs && S.tier < CONFIG.tiers.length - 1) { S.tier++; S.tierAt = now; S.ema = 0; }
+  }
+
+  async function paintLoop() {
+    if (S.painting) return;
+    S.painting = true;
+    let failures = 0;
+    while (S.alive) {
+      if (document.hidden || !S.vw || video.readyState < 2) { await new Promise(r => setTimeout(r, 120)); continue; }
+      sizeFrame();
+      fctx.drawImage(video, 0, 0, frame.width, frame.height);
+      const ref = grabThumb(frame);
+      const t0 = performance.now();
+      try {
+        const out = await stylizer.stylize(frame);
+        if (!S.alive) break;
+        showPainted(out, ref);
+        adapt(performance.now() - t0);
+        failures = 0;
+      } catch (err) {
+        console.error(err);
+        if (++failures >= 3) { toast('Painting stopped: ' + (err.message || 'the model failed') + '.', 6000); el.status.classList.add('done'); break; }
+        if (S.tier > 0) S.tier--;
+      }
+      await nextFrame();
+    }
+    S.painting = false;
+  }
+
+  function updateMask(now) {
+    if (!segmenter || now - S.maskAt < 1000 / CONFIG.maskHz || !maskIn.width) return;
+    S.maskAt = now;
+    mctx.drawImage(video, 0, 0, maskIn.width, maskIn.height);
+    try {
+      segmenter.segmentForVideo(maskIn, now, res => {
+        const mask = res.confidenceMasks?.[segmenter.personIndex];
+        if (!mask) return;
+        const w = mask.width, h = mask.height, f = mask.getAsFloat32Array();
+        if (!S.maskData || S.maskData.length !== w * h * 4) {
+          S.maskData = new Uint8Array(w * h * 4);
+          U.tMask.value.dispose(); U.tMask.value = dataTex(S.maskData, w, h);
+          U.uMaskTexel.value.set(1 / w, 1 / h);
+        }
+        const d = S.maskData;
+        for (let i = 0, j = 0; i < f.length; i++, j += 4) d[j] += (f[i] * 255 - d[j]) * 0.6;   // ease, so edges do not flicker
+        U.tMask.value.needsUpdate = true; U.uHasMask.value = 1;
+      });
+    } catch (err) { console.error(err); segmenter = null; U.uHasMask.value = 0; toast('People cannot be left unpainted right now: segmentation stopped.', 6000); }
+  }
+
+  function tick() {
+    if (!S.alive) return;
+    requestAnimationFrame(tick);
+    const now = performance.now(), dt = Math.min(100, now - S.last); S.last = now;
+    if (video.videoWidth !== S.vw || video.videoHeight !== S.vh) layout();
+    if (!S.vw || document.hidden) return;
+
+    if (S.refB) {
+      const m = estimateShift(S.refB, grabThumb(video), thumb.width, thumb.height);
+      if (m.err < CONFIG.lostErr) { S.offB[0] += (m.dx - S.offB[0]) * 0.7; S.offB[1] += (m.dy - S.offB[1]) * 0.7; }
+      U.uOffB.value.set(S.offB[0] / thumb.width, S.offB[1] / thumb.height);
+      U.uOffA.value.set((S.baseA[0] + S.offB[0]) / thumb.width, (S.baseA[1] + S.offB[1]) / thumb.height);
+    }
+    if (U.uMix.value < 1) U.uMix.value = Math.min(1, (now - S.fadeFrom) / CONFIG.fadeMs);
+    if (U.uHave.value && U.uIntro.value < 1) { const t = Math.min(1, (now - S.introFrom) / 1400); U.uIntro.value = 1 - Math.pow(1 - t, 3); }
+    U.uReveal.value += ((S.held ? 1 : 0) - U.uReveal.value) * Math.min(1, dt / 70);
+    updateMask(now);
+    renderer.render(scene, camera);
+  }
+
+  const onResize = () => layout();
+  window.addEventListener('resize', onResize);
+
+  return {
+    run() { layout(); tick(); },
+    beginPainting() { if (S.alive) paintLoop(); },
+    hold(v) { S.held = v; },
+    snapshot() { renderer.render(scene, camera); return new Promise(r => el.view.toBlob(r, 'image/jpeg', 0.92)); },
+    stop() {
+      S.alive = false;
+      window.removeEventListener('resize', onResize);
+      stream.getTracks().forEach(t => t.stop());
+      video.srcObject = null;
+      [videoTex, U.tA.value, U.tB.value, U.tMask.value].forEach(t => t.dispose());
+      material.dispose(); renderer.dispose();
+    },
+  };
+}
+
+function close() {
+  session?.stop(); session = null;
+  el.stage.hidden = true; el.landing.hidden = false; el.start.disabled = false;
+}
+
+async function capture() {
+  if (!session) return;
+  el.flash.classList.remove('go'); void el.flash.offsetWidth; el.flash.classList.add('go');
+  const blob = await session.snapshot();   // the canvas only: no buttons in the picture
+  if (!blob) { toast('The picture could not be saved.'); return; }
+  const file = new File([blob], `storybook-${Date.now()}.jpg`, { type: 'image/jpeg' });
+  const touch = matchMedia('(pointer: coarse)').matches;
+  if (touch && navigator.canShare?.({ files: [file] })) {
+    try { await navigator.share({ files: [file] }); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = file.name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast('Picture saved.', 1800);
+}
+
+/* ---------- wiring ---------- */
+el.start.addEventListener('click', start);
+el.close.addEventListener('click', close);
+el.shutter.addEventListener('click', capture);
+
+const hold = v => { session?.hold(v); el.peek.classList.toggle('held', v); };
+el.peek.addEventListener('pointerdown', e => { e.preventDefault(); el.peek.setPointerCapture?.(e.pointerId); hold(true); });
+for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) el.peek.addEventListener(type, () => hold(false));
+el.peek.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); hold(true); } });
+el.peek.addEventListener('keyup', () => hold(false));
+el.peek.addEventListener('blur', () => hold(false));
+el.stage.addEventListener('contextmenu', e => e.preventDefault());
+
+// On a computer, offer the QR code for this address so it can be opened on a phone.
+(async () => {
+  const phone = matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 820;
+  if (phone || !/^https?:$/.test(location.protocol)) return;
+  try {
+    await loadScript(CONFIG.libs.qr);
+    const qr = window.qrcode(0, 'M');
+    qr.addData(location.href.split('#')[0]); qr.make();
+    const n = qr.getModuleCount();
+    let d = '';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c} ${r}h1v1h-1z`;
+    $('qrCode').innerHTML = `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR code for this page"><path fill="#24402A" d="${d}"/></svg>`;
+    $('qr').hidden = false;
+  } catch { /* the page works without it */ }
+})();
+</script>
+</body>
+</html>
